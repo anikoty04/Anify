@@ -1,3 +1,3 @@
-public enum EstadoReproductor {
+public enum PlayerState {
     REPRODUCIENDO, PAUSADO, DETENIDO;
 }
