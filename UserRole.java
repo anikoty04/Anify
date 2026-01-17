@@ -1,3 +1,3 @@
 public enum UserRole {
-    ADMIN, STANDAR;
+    ADMIN, STANDART;
 }
