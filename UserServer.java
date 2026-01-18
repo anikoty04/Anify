@@ -11,10 +11,10 @@ public class UserServer {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null.");
         }
-        if (password == null || password.isBlank()) {
+        if (password == null || password.isBlank()) { // Password needs to have at least a capital letter, a number , a special character and be at least 8 characters long
             throw new IllegalArgumentException("Password cannot be null");
         }
-        role = UserRole.STANDAR;
+        role = UserRole.STANDART;
         active = false;
     }
     //Make getters and setters
