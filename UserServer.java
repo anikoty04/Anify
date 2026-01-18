@@ -1,8 +1,11 @@
 public class UserServer {
+    //Declare the variables that a user can have
     private String name;
     private String password;
     private UserRole role;
     private boolean active;
+
+    //Makes the main constructor with exceptions
 
     public UserServer (String name, String password) {
         if (name == null || name.isBlank()) {
@@ -14,7 +17,7 @@ public class UserServer {
         role = UserRole.STANDAR;
         active = false;
     }
-
+    //Make getters and setters
     public String getName() {
         return name;
     }
@@ -30,8 +33,14 @@ public class UserServer {
     public void setName(String name) {
         this.name = name;
     }
-    public void setPassword() {
+    public void setPassword(String password) {
         this.password = password;
+    }
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
 
