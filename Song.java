@@ -1,34 +1,87 @@
+import java.time.Duration;
+
 public class Song {
     //Declare the variables that a song can have
+    private String title; //Title of the song, we use this for know what song is
+    private String artist; // Coulde be artist , artitsts , group , band , etc, we use this for know who is the creator of the song 
+    private Duration duration; // Use the duration for know how long is the song, right now duration is in seconds, later we convert them into minutes and seconds.
+    private int countReproductions; // Count of total reproductions the song has, use this to know how many reproductions does the song have
+    private boolean explicitContent; // Identify if the song has explicit content
 
-    // Correction: Need to explain what the variables will be used for
-    private String title;
-    // Coulde be artist , artitsts , group , band , etc
-    private String artist; 
-    private float duration; // Why float? 
-    private int playback; // How will you use playback? Consider renaming for clarity
-    private boolean explicitContent;
-    //Makes the main constructor with exceptions
+    //Makes the empty main constructor
     
-    public Song (String title, String artist, int duration, int playback, boolean explicitContent) {
+    public Song () {
+        this.artist = "Unknown"; //default we don´t know the artist
+        this.title = "Unknown"; // default we don´t know the title
+        this.countReproductions = 0; // defaut the song has 0 reproductions
+        this.duration = Duration.ZERO; //default the song last 0:00
+        this.explicitContent = false;  //default the song hasn't explicit content
+    }
+
+    //Makes the main constructor with the title and artist
+
+    public Song (String title, String artist) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException ("A title is needed for the song");
         }
         if (artist == null || artist.isBlank()) {
             throw new IllegalArgumentException ("There must be an assigned artist");
         }
-        if (duration < 0) { // Correction: duration must not be 0 too , so change to <= 0
-            throw new IllegalArgumentException("Duration cannot be negative");
-        }
-        if (playback < 0) {
-            throw new IllegalArgumentException("Playback cannot be negative");
-        }
-        this.artist = artist;
-        this.title = title;
-        this.playback = playback;
-        this.duration = duration;
-        this.explicitContent = explicitContent; 
+        this.title = title; //we need to know the title of the song
+        this.artist = artist; //We need to know the artist of the song
+        countReproductions = 0; //default the song has 0 reproductions
+        duration = Duration.ZERO; //default the song last 0:00
+        explicitContent = false; //default the song hasn't explicit content
     }
 
+    //Makes the main constructor with all parametres
+
+    public Song(String title, String artist, int countReproductions, Duration duration, boolean explicitContent) {
+         if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException ("A title is needed for the song");
+        }
+        if (artist == null || artist.isBlank()) {
+            throw new IllegalArgumentException ("There must be an assigned artist");
+        }
+        if (duration.isNegative()) { 
+            throw new IllegalArgumentException("Duration cannot be negative");
+        }
+        if (countReproductions < 0) {
+            throw new IllegalArgumentException("Playback cannot be negative");
+        }
+        //We need to know all the parametres
+        this.title = title; 
+        this.artist = artist;
+        this.countReproductions = countReproductions;
+        this.duration = duration;
+        this.explicitContent = explicitContent;
+    }
     //Getters for all the variables are needed, use try/catch if necessary
+    public String getTitle() {  //To get the title of the song
+        return title;
+    }
+    public Duration getDuration() { //To get the duration of the song
+        return duration;
+    }
+    public int getReproductions() { //To get the total of reproductions of the song
+        return countReproductions;
+    }
+    public boolean getExplicitContent() { // To get if the song has explicit content (true or false)
+        return explicitContent;
+    }
+    public void setTitle(String title) { //To change the title of the song
+        this.title = title;
+    }
+    public void setArtist(String artist) {  //To change the artist of the song
+        this.artist = artist;
+    }
+    public void setDuration(Duration duration) {  //To change de duration of the song
+        this.duration = duration;
+    }
+    public void setReproductions(int playback) {  //To change the total of reproductions
+        this.countReproductions = playback;
+    }
+    public void setExplicitContent(boolean explicitContent) {  //To change if the song has explicit content
+        this.explicitContent = explicitContent;
+    }
 }
