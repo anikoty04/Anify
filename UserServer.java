@@ -19,13 +19,15 @@ public class UserServer {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null.");
         }
-        if (password == null || password.isBlank()) {
+        if (password == null || password.isBlank()) { // Password needs to have at least a capital letter, a number , a special character and be at least 8 characters long
             throw new IllegalArgumentException("Password cannot be null");
         }
         this.name = name; //The user name
         this.password = password; //The password of the user
-        role = UserRole.STANDAR; //default the role is standar, without privileges
+        role = UserRole.STANDART; //default the role is standar, without privileges
         active = true; //Now the user has name and password so it´s active
+        role = UserRole.STANDART;
+        active = false;
     }
 
     //Make getters and setters
