@@ -10,7 +10,7 @@ public class UserServer {
     public UserServer () {
         name = " "; //default the name is empty
         password = null; //default the password is null because doesn´t exist
-        role = UserRole.STANDAR; //default the role is standar
+        role = UserRole.STANDART; //default the role is standar
         active = false; //default the user is blocked
     }
     
