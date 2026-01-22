@@ -11,8 +11,8 @@ public class Song {
     //Makes the empty main constructor
     
     public Song () {
-        this.artist = "Unknown"; //default we don´t know the artist
-        this.title = "Unknown"; // default we don´t know the title
+        this.artist = " "; //default we don´t know the artist
+        this.title = " "; // default we don´t know the title
         this.countReproductions = 0; // defaut the song has 0 reproductions
         this.duration = Duration.ZERO; //default the song last 0:00
         this.explicitContent = false;  //default the song hasn't explicit content
@@ -78,10 +78,13 @@ public class Song {
     public void setDuration(Duration duration) {  //To change de duration of the song
         this.duration = duration;
     }
-    public void setReproductions(int playback) {  //To change the total of reproductions
-        this.countReproductions = playback;
+    public void setReproductions(int reproductions) {  //To change the total of reproductions
+        this.countReproductions = reproductions;
     }
     public void setExplicitContent(boolean explicitContent) {  //To change if the song has explicit content
         this.explicitContent = explicitContent;
+    }
+    public void play() { //To count reproductions
+        countReproductions++;
     }
 }

@@ -27,7 +27,7 @@ public class UserServer {
         role = UserRole.STANDART; //default the role is standar, without privileges
         active = true; //Now the user has name and password so it´s active
         role = UserRole.STANDART;
-        active = false;
+        active = true;
     }
 
     //Make getters and setters
@@ -55,6 +55,8 @@ public class UserServer {
     public void setActive(boolean active) {  //To change if the user is active or not
         this.active = active;
     }
-    
+    public boolean autentication(String pass) {  //verify if user it´s correct
+        return active && password.equals(pass);
+    }
 
 }

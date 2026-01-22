@@ -86,9 +86,59 @@ public class StreamingServer {
     }
 
     //Makes user sign
-    public void userSign() {
-        
+    public void userSign(UserServer u) {
+        user.add(u);
+        System.out.println("User signed: " + u.getName());
+    }
+    //Makes the login
+    public UserServer login(String name, String pass) throws Exception {
+        if (serverState != ServerState.ACTIVE) {
+            throw new Exception("Server not available");
+        }
+        for (UserServer u : user) {
+            if (u.getName().equals(name) && u.autentication(pass)) {
+                conectedUsers++;
+                System.out.println("Login successful: " + name);
+                return u;
+            }
+        }
+
+        System.out.println("Login failed: " + name);
+        throw new Exception("Incorrect user or password");
+    }
+    //Add a song
+    public void registerSong(Song s) {
+        songCatalog.add(s);
+        System.out.println("Song registed: " + s.getTitle());
+    }
+    //Search a song and check if you can heard it or not
+     public Song requestSong(int index, boolean parentalControl) throws Exception {
+        if (index < 0 || index >= songCatalog.size()) {
+            throw new Exception("Song not existing");
+        }
+
+        Song s = songCatalog.get(index);
+
+        if (s.isExplicit() && parentalControl) {
+            System.out.println("Blocking by parental control: " + s.getTitle());
+            throw new Exception("Explicit content blocked");
+        }
+
+        s.play();
+        reproductions++;
+        System.out.println("Reproduction: " + s.getTitle());
+
+        return s;
+    }
+    //Unfinish metod
+    public void validarLicencia(UserServer u) throws Exception {
+
+    int index = user.indexOf(u);
+
+    if (index == -1) {
+        System.out.println("User without license: " + u.getName());
+        throw new Exception("User not registered on the server");
     }
 
-
+}
 }
