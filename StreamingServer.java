@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class StreamingServer {
     private ArrayList<Song> songCatalog; // List that contains all the songs
@@ -88,57 +89,84 @@ public class StreamingServer {
     //Makes user sign
     public void userSign(UserServer u) {
         user.add(u);
-        System.out.println("User signed: " + u.getName());
+        log.addLog("User signed: " + u.getName());
     }
     //Makes the login
-    public UserServer login(String name, String pass) throws Exception {
+    public boolean login(String name, String pass) throws Exception {
         if (serverState != ServerState.ACTIVE) {
             throw new Exception("Server not available");
         }
         for (UserServer u : user) {
-            if (u.getName().equals(name) && u.autentication(pass)) {
+            if (u.getName().equals(name) && u.getPassword().equals(pass)) {
                 conectedUsers++;
-                System.out.println("Login successful: " + name);
-                return u;
+                log.addLog("Login successful: " + name);
+                return true;
             }
         }
 
-        System.out.println("Login failed: " + name);
-        throw new Exception("Incorrect user or password");
+        log.addLog("Login failed: " + name);
+        return false;
     }
     //Add a song
     public void registerSong(Song s) {
         songCatalog.add(s);
-        System.out.println("Song registed: " + s.getTitle());
+       log.addLog("Song registed: " + s.getTitle());
     }
     //Search a song and check if you can heard it or not
-     public Song requestSong(int index, boolean parentalControl) throws Exception {
-        if (index < 0 || index >= songCatalog.size()) {
-            throw new Exception("Song not existing");
+     public boolean requestSong(UserServer u, Song s) {
+        if (serverState != ServerState.ACTIVE) {
+            return false;
         }
-
-        Song s = songCatalog.get(index);
-
-        if (s.isExplicit() && parentalControl) {
-            System.out.println("Blocking by parental control: " + s.getTitle());
-            throw new Exception("Explicit content blocked");
+        if (!rateLimit(u)) {
+            return false;
         }
+        if (!validateLicense()) {
+            return false;
+        }
+        if (!checkEsplicitContent(u, s)) {
+            return false;
+        }
+        recordGlobalReproductions();
+        log.addLog("Song played: " + s.getTitle() + " by " + u.getName());
+        return true;
+     }
 
-        s.play();
+    //Validate license
+    public boolean validateLicense() {
+        return !activeLicenses.isEmpty();
+    }
+    //Check if the content is esplicit or not
+    public boolean checkEsplicitContent(UserServer u, Song s) {
+        if (s.isExplicit()) {
+            log.addLog("Explicit content blocked for user: " + u.getName());
+            return false;
+        }
+        return true;
+    }
+    //Generate aleatory recommended songs
+    public ArrayList<Song> generateRecommendations(Song s){
+        ArrayList<Song> recommendations = new ArrayList<>();
+        Random r = new Random();
+
+        if (songCatalog.isEmpty()) {
+            return recommendations;
+        }
+        if (!recommendations.contains(s)) {
+            recommendations.add(s);
+        }
+        log.addLog("Recommendations generated");
+        return recommendations;
+    }
+    //Return if u can play another song
+    public boolean rateLimit(UserServer u) {
+        return true;
+    }
+    //Total of songs played
+    private static void recordGlobalReproductions() {
         reproductions++;
-        System.out.println("Reproduction: " + s.getTitle());
-
-        return s;
     }
-    //Unfinish metod
-    public void validarLicencia(UserServer u) throws Exception {
-
-    int index = user.indexOf(u);
-
-    if (index == -1) {
-        System.out.println("User without license: " + u.getName());
-        throw new Exception("User not registered on the server");
+    //Stadistics report
+    public String resumenEstadisticas() {
+        return "Users registered: " + user.size() + "\nConnected users: " + conectedUsers + "\nSongs in catalog: " + songCatalog.size() + "\nTotal reproductions: " + reproductions;
     }
-
-}
 }
