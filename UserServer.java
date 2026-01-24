@@ -1,5 +1,6 @@
 public class UserServer {
     //Declare the variables that a user can have
+     private boolean parentalControlActive; //If the user has parental control or not
     private String name; //Name of the user
     private String password; //Password of the user
     private UserRole role; //Role that the user can be
@@ -12,6 +13,7 @@ public class UserServer {
         password = null; //default the password is null because doesn´t exist
         role = UserRole.STANDART; //default the role is standar
         active = false; //default the user is blocked
+         parentalControlActive =  true;
     }
     
     //Makes the main constructor 
@@ -28,11 +30,15 @@ public class UserServer {
         active = true; //Now the user has name and password so it´s active
         role = UserRole.STANDART;
         active = true;
+         parentalControlActive =  true;
     }
 
     //Make getters and setters
     public String getName() { //To get the name of the user
         return name;
+    }
+    public boolean getParentalControlActive() {
+        return parentalControlActive;
     }
     public String getPassword() {  //To get the password of the user
         return password;
@@ -57,6 +63,9 @@ public class UserServer {
     }
     public boolean autentication(String pass) {  //verify if user it´s correct
         return active && password.equals(pass);
+    }
+        public void setParentalControlActive(boolean parentalControlActive) {
+        this.parentalControlActive = parentalControlActive;
     }
 
 }
