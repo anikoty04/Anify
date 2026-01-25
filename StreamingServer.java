@@ -1,7 +1,9 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 public class StreamingServer {
+    private boolean parentalControlActive;
     private ArrayList<Song> songCatalog; // List that contains all the songs
     private ArrayList<UserServer> user; // List that contains all the users
     private ServerLog log; //Logs in the server
@@ -9,6 +11,7 @@ public class StreamingServer {
     private static int reproductions = 0; //Total of reproductions
     private static int conectedUsers = 0; //Total of users conected
     private ServerState serverState; //How is the server
+    private int timePlayed = 0; //Total of time played
 
     //Makes empty main constructor
 
@@ -20,6 +23,7 @@ public class StreamingServer {
         reproductions = 0; //Count the total of reproductions
         conectedUsers = 0; //Count the total of users conected
         serverState = ServerState.ACTIVE; //Default the server is active
+       
     }
 
     //Makes the main constructor
@@ -113,22 +117,24 @@ public class StreamingServer {
        log.addLog("Song registed: " + s.getTitle());
     }
     //Search a song and check if you can heard it or not
-     public boolean requestSong(UserServer u, Song s) {
-        if (serverState != ServerState.ACTIVE) {
-            return false;
+     public void requestSong(UserServer u, Song s) throws NotLoggedException, ServerDownException, ExplicitContentException, RateLimitException {
+        if (u == null) {
+            throw new NotLoggedException();
         }
-        if (!rateLimit(u)) {
-            return false;
+        if (serverState != ServerState.ACTIVE) {
+            throw new ServerDownException();
         }
         if (!validateLicense()) {
-            return false;
+            throw new ServerDownException();
         }
-        if (!checkEsplicitContent(u, s)) {
-            return false;
+        if (s.isExplicit() && u.getParentalControlActive()) {
+            throw new ExplicitContentException();
+        }
+        if (!rateLimit(u)) {
+            throw new RateLimitException();
         }
         recordGlobalReproductions();
         log.addLog("Song played: " + s.getTitle() + " by " + u.getName());
-        return true;
      }
 
     //Validate license
@@ -168,5 +174,83 @@ public class StreamingServer {
     //Stadistics report
     public String resumenEstadisticas() {
         return "Users registered: " + user.size() + "\nConnected users: " + conectedUsers + "\nSongs in catalog: " + songCatalog.size() + "\nTotal reproductions: " + reproductions;
+    }
+    //Generate recommendations
+    public ArrayList<Song> generateRecommendations(ArrayList<Song> history) {
+        ArrayList<Song> recommendations = new ArrayList<>();
+        ArrayList<Song> catalog = new ArrayList<>(songCatalog);
+
+        //Add songs of the history
+        for (int i = history.size() - 1; i >= 0; i--) {
+            Song s = history.get(i);
+            if (!recommendations.contains(s)) {
+                recommendations.add(s);
+            }
+        }
+        catalog.sort(Comparator.comparingInt(Song::getReproductions).reversed());
+        for (Song s : catalog) {
+            if (!recommendations.contains(s)) {
+                recommendations.add(s);
+            }
+            if (recommendations.size() >= 5) {
+                break;
+            }
+        }
+              log.addLog("Recommendations generated");
+            return recommendations;
+    }
+    //Record views
+    public void recordViews(Song s, int durationInSeconds) {
+        reproductions++;
+        timePlayed += durationInSeconds;
+        s.increaseReproductions();
+        log.addLog("Reproduction Registred: " + s.getTitle());
+    }
+    //Globals Stadistics
+    public void globalStadistics() {
+        Song moreListenedTo = null;
+        int maxReproductions = 0;
+
+        for (Song s : songCatalog) {
+            if (s.getReproductions() > maxReproductions) {
+                maxReproductions = s.getReproductions();
+                moreListenedTo = s;
+            }
+        }
+        System.out.println("------Globals Stadistics------");
+        if (moreListenedTo != null) {
+            System.out.println("More listened song: " + moreListenedTo.getTitle() + " (" + maxReproductions + " reproductions");
+        }
+        System.out.println("Number of active users: " + conectedUsers);
+        System.out.println("Total time played: " + timePlayed + " seconds");
+        System.out.println("Total of reproductions: " + reproductions);
+        System.out.println("----------------------------------------------");
+    }
+    //Activate license
+    public void activateLicenses(License lic) {
+        if (lic == null) {
+            System.out.println("Cannot activate a null license");
+            return;
+        }
+        if (!activeLicenses.contains(lic)) {
+            activeLicenses.add(lic);
+            lic.setActive(true);
+            log.addLog("License activated: " + lic.getCode());
+            System.out.println("License active correctly: " + lic.getCode());
+        } else {
+            System.out.println("The license was already active" + lic.getCode());
+            log.addLog("Attempt to reactivate license: " + lic.getCode());
+        }
+    }
+    public void parentalControlActive(boolean active) {
+        parentalControlActive = active;
+
+        if (active) {
+            log.addLog("Parental control ACTIVATED on the server");
+            System.out.println("Parental control ACTIVATED");
+        }else {
+            log.addLog("Parental control DESACTIVATED on the server");
+            System.out.println("Parental control DESACTIVATED");
+        }
     }
 }

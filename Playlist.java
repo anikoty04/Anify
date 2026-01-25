@@ -36,5 +36,13 @@ public class Playlist {
     public void setSongs(ArrayList<Song> songs) { //To change the list of songs
         this.songs = songs;
     }
+     public void addSong(Song song) {
+        if (song == null) {
+            return;
+        }
+        if (!songs.contains(song)) {
+            songs.add(song);
+        }
+    }
     
 }

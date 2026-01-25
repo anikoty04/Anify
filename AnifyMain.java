@@ -35,9 +35,43 @@ public class AnifyMain {
         server.parentalControlActive(true);
 
         //Log in
-        StreamingClient clienteAna = new StreamingClient(user1, server);
-        StreamingClient clienteJuan = new StreamingClient(user2, server);
+        try{
+        server.login(user1.getName(),user1.getPassword());
+        server.login(user2.getName(),user2.getPassword());
+        }catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        //Create playlist
+        Playlist playlist1 = new Playlist("Favoritas", false);
+        playlist1.addSong(song1);
+        playlist1.addSong(song1);
+        
+        StreamingClient client1 = new StreamingClient(user1, server);
+        client1.setPlaylist(playlist1);
 
+        //Play songs
+        try{
+            server.requestSong(user1, song1);
+            server.recordViews(song1, song1.getDuration().toSecondsPart());
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        //Pause and resume
+        client1.pause();
+        System.out.println("Player pause");
+
+        client1.resume();
+        System.out.println("Resume player");
+
+        //Show history
+        System.out.println("History of user: ");
+        for (Song s : client1.getHistory()) {
+            System.out.println("- " + s.getTitle());
+        }
+        //Show server stadistics
+        server.globalStadistics();
+
+        //Register logs
+        server.getLog().showLogs();
     }
-    
 }

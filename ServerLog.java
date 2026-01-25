@@ -52,5 +52,17 @@ public class ServerLog {
     public void setError(ArrayList<String> error) { //To change the error
         this.error = error;
     }
+    //Add logs
+    public void addLog(String message) {
+        access.add(message);
+        System.out.println("LOG: " + message);
+    }
+    //Show logs
+    public void showLogs() {
+        for (String log : access) {
+            System.out.println(log);
+        }
+        System.out.println("----------------------");
+    }
 
 }

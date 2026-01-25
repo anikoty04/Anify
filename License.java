@@ -6,15 +6,23 @@ public class License {
     private  LocalDate start; //Day we start with the subscription
     private LocalDate end; //Day we end with the subscription
     private boolean active; //Identify if the license is active or not
+    private String code; //Code to identify the license
 
     //Make the empty constructor
     public License() {
         subscriptionDuration = Period.ZERO; //default subscription be 0
         start = null; //default there's no start date
         end = null; //default there's no end date
-        active = false; //default the license is desactivate
+        active = true; //default the license is desactivate
     }
     //Make the main constructor with exceptions
+    public License(String code) {
+        this.code = code;
+        subscriptionDuration = Period.ZERO;
+        start = null;
+        end = null;
+        active = true;
+    }
     
     public License(Period subscriptionDuration, LocalDate start, LocalDate end, boolean active) {
         if (subscriptionDuration.isNegative()) {
@@ -40,6 +48,9 @@ public class License {
     public LocalDate getEnd() { //To get the end date
         return end;
     }
+    public String getCode() {
+        return code;
+    }
     public boolean active() { //To get if the license is active or not
         return active;
     }
@@ -54,6 +65,15 @@ public class License {
     }
     public void setActive(boolean active) { //To change if the license is active or not
         this.active = active;
+    }
+
+    public boolean isValid() {
+            if (!active || start == null || end == null) {
+        return false;
+    }
+
+    LocalDate today = LocalDate.now();
+    return !today.isBefore(start) && !today.isAfter(end);
     }
 
 

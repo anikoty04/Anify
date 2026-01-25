@@ -64,7 +64,7 @@ public class UserServer {
     public boolean autentication(String pass) {  //verify if user it´s correct
         return active && password.equals(pass);
     }
-        public void setParentalControlActive(boolean parentalControlActive) {
+    public void setParentalControlActive(boolean parentalControlActive) {
         this.parentalControlActive = parentalControlActive;
     }
 

@@ -36,7 +36,7 @@ public class Song {
 
     //Makes the main constructor with all parametres
 
-    public Song(String title, String artist, int countReproductions, Duration duration, boolean explicitContent) {
+    public Song(String title, String artist, Duration duration, boolean explicitContent) {
          if (title == null || title.isBlank()) {
             throw new IllegalArgumentException ("A title is needed for the song");
         }
@@ -52,7 +52,6 @@ public class Song {
         //We need to know all the parametres
         this.title = title; 
         this.artist = artist;
-        this.countReproductions = countReproductions;
         this.duration = duration;
         this.explicitContent = explicitContent;
     }
@@ -85,6 +84,14 @@ public class Song {
         this.explicitContent = explicitContent;
     }
     public void play() { //To count reproductions
+        countReproductions++;
+    }
+
+    public boolean isExplicit() {
+        return explicitContent;
+    }
+    //Increase reproductions
+    public void increaseReproductions() {
         countReproductions++;
     }
 }
