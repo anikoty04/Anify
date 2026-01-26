@@ -1,0 +1,82 @@
+// Clase abstracta: todos los agentes tienen nombre, vida y método de ataque
+public abstract class Agente {
+    protected String nombre;
+    protected int vida;
+
+    public Agente(String nombre, int vida) {
+        this.nombre = nombre;
+        this.vida = vida;
+    }
+
+    // Método abstracto: cada agente ataca distinto
+    public abstract void bailar();
+}
+
+// Interfaces para habilidades especiales
+public interface HabilidadEspecial {
+    void usarHabilidad();
+}
+
+public interface Arma {
+    void disparar();
+}
+
+// Clase concreta: Jett (usa habilidad + arma)
+public class Jett extends Agente implements HabilidadEspecial, Arma {
+
+    public Jett() {
+        super("Jett", 100);
+    }
+
+    @Override
+    public void bailar() {
+        System.out.println(nombre + " El baile del pañuelo!");
+    }
+
+    @Override
+    public void usarHabilidad() {
+        System.out.println(nombre + " usa Dash y se desplaza rápido!");
+    }
+
+    @Override
+    public void disparar() {
+        System.out.println(nombre + " dispara con su rifle!");
+    }
+}
+
+// Clase concreta: Sage (habilidad curativa + ataque básico)
+public class Sage extends Agente implements HabilidadEspecial, Arma {
+
+    public Sage() {
+        super("Sage", 120);
+    }
+
+    @Override
+    public void bailar() {
+        System.out.println(nombre + " baila breakbeat!");
+    }
+
+    @Override
+    public void usarHabilidad() {
+        System.out.println(nombre + " cura a un aliado!");
+    }
+
+    @Override
+    public void disparar() {
+        System.out.println(nombre + " dispara con su pistola!");
+    }
+}
+
+// Clase principal para probar el juego
+public class ValorantSim {
+    public static void main(String[] args) {
+        Agente[] agentes = { new Jett(), new Sage() };
+
+        for (Agente a : agentes) {
+            a.atacar();  // polimorfismo: mismo método, comportamiento distinto
+            ((HabilidadEspecial)a).usarHabilidad();
+            ((Arma)a).disparar();
+            System.out.println("-----");
+        }
+    }
+}

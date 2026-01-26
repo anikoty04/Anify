@@ -1,0 +1,36 @@
+/*
+Desde la subclase, si la variable es protected, se accede directamente por su nombre como si fuera propia.
+No necesitas getter ni setter obligatoriamente. */
+
+public abstract class Empleado {
+    protected double salarioBase;
+}
+
+public class Programador extends Empleado {
+    public void mostrarSalario() {
+        System.out.println("Salario: " + salarioBase); // acceso directo
+    }
+}
+
+
+/*
+Una función abstracta en una clase abstracta no tiene implementación.
+Las subclases están obligadas a implementarla con su propio código.
+Esto garantiza que todas las subclases cumplan un mismo contrato.
+*/
+
+public abstract class Empleado {
+    public abstract double calcularSalario(); // sin implementación
+}
+
+public class Programador extends Empleado {
+    @Override
+    public double calcularSalario() {
+        return 3000; // implementación concreta
+    }
+}
+
+
+
+
+

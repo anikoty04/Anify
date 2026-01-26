@@ -1,0 +1,16 @@
+public interface Imprimible {
+    void imprimir();
+}
+
+public interface Escaneable {
+    void escanear();
+}
+
+// Clase que implementa ambas interfaces
+public class ScannerPrinter implements Imprimible, Escaneable {
+    @Override
+    public void imprimir() { System.out.println("Imprimiendo..."); }
+
+    @Override
+    public void escanear() { System.out.println("Escaneando..."); }
+}

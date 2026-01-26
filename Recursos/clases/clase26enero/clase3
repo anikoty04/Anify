@@ -1,0 +1,42 @@
+// Clase abstracta
+public abstract class Imprimible {
+    public abstract void imprimir(); // método abstracto
+}
+
+// Clase que hereda de la clase abstracta
+public class Documento extends Imprimible {
+    private String contenido;
+
+    public Documento(String contenido) {
+        this.contenido = contenido;
+    }
+
+    @Override
+    public void imprimir() {
+        System.out.println("Documento: " + contenido);
+    }
+}
+
+// Otra clase que hereda de la clase abstracta
+public class Foto extends Imprimible {
+    private String nombreArchivo;
+
+    public Foto(String nombreArchivo) {
+        this.nombreArchivo = nombreArchivo;
+    }
+
+    @Override
+    public void imprimir() {
+        System.out.println("Foto: " + nombreArchivo);
+    }
+}
+
+// Uso del polimorfismo
+public class Main {
+    public static void main(String[] args) {
+        Imprimible[] cosas = { new Documento("Informe"), new Foto("Vacaciones.jpg") };
+        for (Imprimible c : cosas) {
+            c.imprimir(); // se llama al método correcto según el objeto
+        }
+    }
+}
