@@ -1,0 +1,45 @@
+public class Main {
+    public static void main(String[] args) throws InvalidInputException{
+        System.out.println("Puerta XOR en Java con excepciones personalizadas");
+
+        // Ejemplos de uso 
+        try {
+            System.out.println("puertaXOR(true, false): " + puertaXOR(true, false));
+            System.out.println("puertaXOR(false, true): " + puertaXOR(false, true));
+            System.out.println("puertaXOR(false, false): " + puertaXOR(false, false));
+            System.out.println("puertaXOR(true, true): " + puertaXOR(true, true));
+            // System.out.println("puertaXOR(true, null): " + puertaXOR(true, null)); // usar Boolean si desea null
+        } catch (InvalidInputException e) {
+            System.err.println("Error en ejemplos: " + e.getMessage());
+        }
+
+        Boolean input;
+        Boolean input2;
+
+        // entrada por teclado
+        try (java.util.Scanner scanner = new java.util.Scanner(System.in)) {
+            System.out.print("Ingrese el primer valor booleano (true/false): ");
+            input = scanner.nextBoolean();
+
+            System.out.print("Ingrese el segundo valor booleano (true/false): ");
+            input2 = scanner.nextBoolean();
+
+            boolean resultado = puertaXOR(input, input2);
+            System.out.println("Resultado de la puerta XOR: " + resultado);
+        } catch (InvalidInputException e) {
+            System.err.println("Error: " + e.getMessage());
+        } catch (java.util.InputMismatchException e) {
+            throw new InvalidInputException("Entrada inválida: se esperaba un valor booleano (true/false).");
+        }
+    }
+
+    public static boolean puertaXOR(Boolean a, Boolean b) throws InvalidInputException {
+        if (a == null) {
+            throw new InvalidInputException("Entrada inválida para 'a': null");
+        }
+        if (b == null) {
+            throw new InvalidInputException("Entrada inválida para 'b': null");
+        }
+        return (a || b) && !(a && b);
+    }
+}
